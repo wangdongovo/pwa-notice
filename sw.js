@@ -35,31 +35,31 @@ self.addEventListener('push', (event) => {
 
 if (!self.define) {
   let e,
-    i = {}
-  const n = (n, s) => (
-    (n = new URL(n + '.js', s).href),
-    i[n] ||
-      new Promise((i) => {
+    n = {}
+  const s = (s, i) => (
+    (s = new URL(s + '.js', i).href),
+    n[s] ||
+      new Promise((n) => {
         if ('document' in self) {
           const e = document.createElement('script')
-          ;(e.src = n), (e.onload = i), document.head.appendChild(e)
-        } else (e = n), importScripts(n), i()
+          ;(e.src = s), (e.onload = n), document.head.appendChild(e)
+        } else (e = s), importScripts(s), n()
       }).then(() => {
-        let e = i[n]
-        if (!e) throw new Error(`Module ${n} didn’t register its module`)
+        let e = n[s]
+        if (!e) throw new Error(`Module ${s} didn’t register its module`)
         return e
       })
   )
-  self.define = (s, f) => {
+  self.define = (i, c) => {
     const r = e || ('document' in self ? document.currentScript.src : '') || location.href
-    if (i[r]) return
+    if (n[r]) return
     let o = {}
-    const c = (e) => n(e, r),
-      t = { module: { uri: r }, exports: o, require: c }
-    i[r] = Promise.all(s.map((e) => t[e] || c(e))).then((e) => (f(...e), o))
+    const t = (e) => s(e, r),
+      a = { module: { uri: r }, exports: o, require: t }
+    n[r] = Promise.all(i.map((e) => a[e] || t(e))).then((e) => (c(...e), o))
   }
 }
-define(['./workbox-e1498109'], function (e) {
+define(['./workbox-e1cdc987'], function (e) {
   'use strict'
   self.skipWaiting(),
     e.clientsClaim(),
@@ -82,5 +82,21 @@ define(['./workbox-e1498109'], function (e) {
       {}
     ),
     e.cleanupOutdatedCaches(),
-    e.registerRoute(new e.NavigationRoute(e.createHandlerBoundToURL('index.html')))
+    e.registerRoute(new e.NavigationRoute(e.createHandlerBoundToURL('index.html'))),
+    e.registerRoute(
+      /\.(?:png|jpg|jpeg|svg|webp)$/,
+      new e.CacheFirst({
+        cacheName: 'images-cache',
+        plugins: [new e.ExpirationPlugin({ maxEntries: 50, maxAgeSeconds: 604800 })]
+      }),
+      'GET'
+    ),
+    e.registerRoute(
+      /\.(?:js|css)$/,
+      new e.StaleWhileRevalidate({
+        cacheName: 'static-resources',
+        plugins: [new e.ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 604800 })]
+      }),
+      'GET'
+    )
 })
