@@ -50,13 +50,13 @@ if (!self.define) {
         return e
       })
   )
-  self.define = (s, r) => {
-    const o = e || ('document' in self ? document.currentScript.src : '') || location.href
-    if (i[o]) return
-    let c = {}
-    const f = (e) => n(e, o),
-      t = { module: { uri: o }, exports: c, require: f }
-    i[o] = Promise.all(s.map((e) => t[e] || f(e))).then((e) => (r(...e), c))
+  self.define = (s, f) => {
+    const r = e || ('document' in self ? document.currentScript.src : '') || location.href
+    if (i[r]) return
+    let o = {}
+    const c = (e) => n(e, r),
+      t = { module: { uri: r }, exports: o, require: c }
+    i[r] = Promise.all(s.map((e) => t[e] || c(e))).then((e) => (f(...e), o))
   }
 }
 define(['./workbox-e1498109'], function (e) {
@@ -77,7 +77,7 @@ define(['./workbox-e1498109'], function (e) {
           url: 'icons/manifest-icon-512.maskable.png',
           revision: '3deeeaab1fa839af774ceacc782f3358'
         },
-        { url: 'manifest.webmanifest', revision: 'f60d4a1abf4b6772585a188c31484106' }
+        { url: 'manifest.webmanifest', revision: '55ff19f6557af5ed1df90eb19e015cab' }
       ],
       {}
     ),
